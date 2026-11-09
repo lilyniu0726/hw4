@@ -480,14 +480,13 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value>* node, int diff){
 template<class Key, class Value>
 void AVLTree<Key, Value>:: remove(const Key& key)
 {
-  // TODO
-AVLNode<Key, Value>* avl_rem = static_cast<AVLNode<Key, Value>*>(this->internalFind(key));
-AVLNode<Key, Value>* parent = avl_rem->getParent();
+    // TODO
+  AVLNode<Key, Value>* avl_rem = static_cast<AVLNode<Key, Value>*>(this->internalFind(key));
   if (avl_rem == NULL) {
     return;
   }
+  AVLNode<Key, Value>* parent = avl_rem->getParent();
   int diff = 0;
-    if(avl_rem != NULL){
       if(avl_rem->getLeft() == NULL && avl_rem->getRight() == NULL){
         if(parent == NULL){
           this->root_ = NULL;
@@ -496,16 +495,12 @@ AVLNode<Key, Value>* parent = avl_rem->getParent();
         }
         if(parent->getLeft() == avl_rem){
           diff = 1;
-          parent->updateBalance(1);
           avl_rem->getParent()->setLeft(NULL);
         }
         else{
           diff = -1;
-          parent->updateBalance(-1);
           parent->setRight(NULL);
         }
-        delete avl_rem;
-        return;
       }
       else if(avl_rem->getLeft()!= NULL && avl_rem->getRight() == NULL){
         AVLNode<Key, Value>* left = avl_rem->getLeft();
@@ -518,12 +513,10 @@ AVLNode<Key, Value>* parent = avl_rem->getParent();
         left->setParent(parent);
         if(avl_rem->getKey() > parent->getKey()){
           diff = -1;
-          parent->updateBalance(-1);
           parent->setRight(left);
         }
         else if(avl_rem->getKey() < parent->getKey()){
           diff = 1;
-          parent->updateBalance(1);
           parent->setLeft(left);
         }
       }
@@ -538,36 +531,32 @@ AVLNode<Key, Value>* parent = avl_rem->getParent();
         right->setParent(parent);
         if(avl_rem->getKey() > parent->getKey()){
           diff = -1;
-          parent->updateBalance(-1);
           parent->setRight(right);
         }
         else if(avl_rem->getKey() < parent->getKey()){
           diff = 1;
-          parent->updateBalance(1);
           parent->setLeft(right);
         }
       }
       else{
         AVLNode<Key, Value>* pred = static_cast<AVLNode<Key, Value>*>(this->predecessor(avl_rem));
         nodeSwap(avl_rem, pred);
+        parent = avl_rem->getParent();
         AVLNode<Key, Value>* child = avl_rem->getLeft();
-
-        if (parent->getLeft() == avl_rem) {
+        if (parent->getLeft() == avl_rem){
           diff = 1;
-          parent->updateBalance(1);
           parent->setLeft(child);
-        } else {
+        } 
+        else{
           diff = -1;
-          parent->updateBalance(-1);
           parent->setRight(child);
         }
         if (child != NULL) {
           child->setParent(parent);
         }
-      }
-      delete avl_rem;
-      removeFix(parent, diff);
     }
+    delete avl_rem;
+    removeFix(parent, diff);
     return;
 }
 
